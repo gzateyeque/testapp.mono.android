@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">EyeQue</string>
+    <string name="action_settings">Settings</string>
+    <string name="startTestButtonTextString">Start Test</string>
+    <string name="startTitleTextString">EyeQue Vision Test</string>
+    <string name="resultTitleTextString">Vision Test Result</string>
+    <string name="uploadButtonTextString">Upload</string>
+    <string name="deviceButtonTextString"></string>
+    <string name="subjectButtonTextString"></string>
+    <string name="serverButtonTextString"></string>
+    <string name="powerTextString">Power: TBC</string>
+    <string name="angleTextString">Angle: 0&#xb0;"</string>
+    <string name="distTextString">Distance: 7.32</string>
+    <string name="eyeButtonTextString">Right Eye</string>
+    <string name="contButtonTextString">Next</string>
+    <string name="resultButtonTextString">Calculate</string>
+    <string name="closerButtonTextString">Closer</string>
+    <string name="furtherButtonTextString">Further</string>
+    <string name="title_activity_start">StartActivity</string>
+    <string name="title_activity_device">DeviceActivity</string>
+    <string name="title_activity_subject">DeviceActivity</string>
+    <string name="title_activity_result">ResultActivity</string>
+    <string name="title_activity_server">ServerActivity</string>
+</resources>
