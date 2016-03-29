@@ -33,6 +33,7 @@ public class ResultActivity extends Activity {
 
     private static int subjectId;
     private static int deviceId;
+    private static int serverId;
     private static double odSph;
     private static double odCyl;
     private static double odAxis;
@@ -60,6 +61,7 @@ public class ResultActivity extends Activity {
 
         subjectId = getIntent().getIntExtra("subjectId", 0);
         deviceId = getIntent().getIntExtra("deviceId", 0);
+        serverId = getIntent().getIntExtra("serverId", 0);
 
         odSph = getIntent().getDoubleExtra("ODS", 0.00);
         odCyl = getIntent().getDoubleExtra("ODC", 0.00);
@@ -167,8 +169,13 @@ public class ResultActivity extends Activity {
                     NetConnection conn = new NetConnection();
                     if (conn.isConnected(getApplicationContext())) {
                         RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                        String url = Constants.RestfulBaseURL + "/eyecloud/api/testresults";
-                        String urlGet = Constants.RestfulBaseURL + "/eyecloud/api/testresults?access_token=" + Constants.AccessToken;
+                        String url;
+                        // if (serverId == 0)
+                            // url = Constants.RestfulBaseURL + "/eyecloud/api/testresults";
+                        // else
+                            url = Constants.RestfulBaseURL + "/eyecloud/api/testresults?access_token=" + Constants.AccessToken;
+                        // String url = Constants.RestfulBaseURL + "/eyecloud/api/testresults";
+                        // String urlGet = Constants.RestfulBaseURL + "/eyecloud/api/testresults?access_token=" + Constants.AccessToken;
 
                         final UUID idOne = UUID.randomUUID();
 
@@ -192,41 +199,45 @@ public class ResultActivity extends Activity {
                             else
                                 params.put("deviceName", "Device 1");
                             params.put("phoneType", "Galaxy 6");
-                            params.put("accomodationPatternName", " ");
+                            params.put("accomodationPatternName", "G5");
                             params.put("beamSplitter", "false");
                             params.put("originalTestResultID", idOne);
                             params.put("subjectID", String.valueOf(subjectId));
-                            JSONArray mDataArr = new JSONArray();
-                            for (int i = 0; i < 6; i++) {
-                                JSONObject mDataObj = new JSONObject();
-                                mDataObj.put("angle", String.format("%.1f", angleList[i]));
-                                mDataObj.put("distance", Integer.toString(rightDistList[i]));
-                                String mIdStr = "R-" + Integer.toString(i);
-                                mDataObj.put("mId", mIdStr);
-                                // mDataObj.put("rightEye", "true");
-                                mDataObj.put("power", String.format("%.2f", rightPowerList[i]));
-                                mDataObj.put("subjectID", String.valueOf(subjectId));
-                                mDataObj.put("testID", String.valueOf(idOne));
-                                mDataArr.put(mDataObj);
-                            }
-                            for (int i = 0; i < 6; i++) {
-                                JSONObject mDataObj = new JSONObject();
-                                mDataObj.put("angle", String.format("%.1f", angleList[i]));
-                                mDataObj.put("distance", Integer.toString(leftDistList[i]));
-                                String mIdStr = "L-" + Integer.toString(i);
-                                mDataObj.put("mId", mIdStr);
-                                // mDataObj.put("rightEye", "true");
-                                mDataObj.put("power", String.format("%.2f", leftPowerList[i]));
-                                mDataObj.put("subjectID", String.valueOf(subjectId));
-                                mDataObj.put("testID", String.valueOf(idOne));
-                                mDataArr.put(mDataObj);
-                            }
-                            params.put("measurements", mDataArr);
+
+                            // if (serverId > 0) {
+                                JSONArray mDataArr = new JSONArray();
+                                for (int i = 0; i < 6; i++) {
+                                    JSONObject mDataObj = new JSONObject();
+                                    mDataObj.put("angle", String.format("%.1f", angleList[i]));
+                                    mDataObj.put("distance", Integer.toString(rightDistList[i]));
+                                    String mIdStr = "R-" + Integer.toString(i);
+                                    mDataObj.put("mId", mIdStr);
+                                    // mDataObj.put("rightEye", "true");
+                                    mDataObj.put("power", String.format("%.2f", rightPowerList[i]));
+                                    mDataObj.put("subjectID", String.valueOf(subjectId));
+                                    mDataObj.put("testID", String.valueOf(idOne));
+                                    mDataArr.put(mDataObj);
+                                }
+                                for (int i = 0; i < 6; i++) {
+                                    JSONObject mDataObj = new JSONObject();
+                                    mDataObj.put("angle", String.format("%.1f", angleList[i]));
+                                    mDataObj.put("distance", Integer.toString(leftDistList[i]));
+                                    String mIdStr = "L-" + Integer.toString(i);
+                                    mDataObj.put("mId", mIdStr);
+                                    // mDataObj.put("rightEye", "true");
+                                    mDataObj.put("power", String.format("%.2f", leftPowerList[i]));
+                                    mDataObj.put("subjectID", String.valueOf(subjectId));
+                                    mDataObj.put("testID", String.valueOf(idOne));
+                                    mDataArr.put(mDataObj);
+                                }
+                                params.put("measurements", mDataArr);
+                            // }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
 
-                        StringRequest request = new StringRequest(Request.Method.POST, urlGet, new Response.Listener<String>() {
+
+                        StringRequest postRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 Log.i(TAG, response);
@@ -261,89 +272,450 @@ public class ResultActivity extends Activity {
                             }
                         };
                         RetryPolicy policy = new DefaultRetryPolicy(Constants.NETCONN_TIMEOUT_VALUE, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-                        request.setRetryPolicy(policy);
-                        queue.add(request);
+                        postRequest.setRetryPolicy(policy);
+                        queue.add(postRequest);
 
                         /*
-                        HashMap<String, String> params = new HashMap<String, String>();
-                        params.put("access_token", Constants.AccessToken);
-                        params.put("axisOS", Integer.toString((int) osAxis));
-                        params.put("axisOD", Integer.toString((int) odAxis));
-                        params.put("cylOD", String.format("%.2f", odCyl));
-                        params.put("cylOS", String.format("%.2f", osCyl));
-                        params.put("sphOD", String.format("%.2f", odSph));
-                        params.put("sphOS", String.format("%.2f", osSph));
-                        params.put("sphEOD", String.format("%.2f", odSe));
-                        params.put("sphEOS", String.format("%.2f", osSe));
-                        params.put("bCalcByPhone", "true");
-                        params.put("deviceID", "null");
-                        params.put("testType", "Full Refraction");
-                        if (deviceId == 2)
-                            params.put("deviceName", "Device 3");
-                        else
-                            params.put("deviceName", "Device 1");
-                        params.put("phoneType", "Galaxy 6");
-                        params.put("accomodationPatternName", " ");
-                        params.put("beamSplitter", "false");
-                        params.put("originalTestResultID", String.valueOf(idOne));
-                        params.put("subjectID", String.valueOf(subjectId));
-                        // params.put("measurements", "[{\"subjectID\":\"11\",\"power\":5.75,\"angle\":90,\"mId\":\"R-0\",\"distance\":176,\"testID\":\"0542268C-3F98-443C-B6E3-DB754FD059AC\"}]");
-                        Log.d("***********", new JSONObject(params).toString());
+                        if (serverId == 0) {
+                            // Upload Measurement Data
+                            // for (int i = 0; i < 6; i++ ) {
+                            // Add code
+                            // }
+                            url = Constants.RestfulBaseURL + "/eyecloud/api/measurements";
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
 
-                        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
-                        CustomRequest jsObjRequest = new CustomRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    Log.d("Response:%n %s", response.toString(4));
-                                    isUploadComplete = true;
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
                                     Toast.makeText(ResultActivity.this,
-                                            "Uploaded to Server Successfully", Toast.LENGTH_SHORT).show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
                                 }
                             }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Error: ", error.getMessage());
-                                Toast.makeText(ResultActivity.this,
-                                        "Can't connect to the *** server", Toast.LENGTH_SHORT).show();
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[0]));
+                                    params.put("distance", Integer.toString(rightDistList[0]));
+                                    params.put("mId", "test-R-1");
+                                    params.put("rightEye", "true");
+                                    params.put("power", String.format("%.2f", rightPowerList[0]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
 
-                            }
-                        });
-                        requestQueue.add(jsObjRequest);
-                        */
-
-                        /*
-                        JsonObjectRequest req = new JsonObjectRequest(Request.Method.POST, url, new JSONObject(params),
-                                new Response.Listener<JSONObject>() {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        try {
-                                            Log.d("Response:%n %s", response.toString(4));
-                                            isUploadComplete = true;
-                                            Toast.makeText(ResultActivity.this,
-                                                    "Uploaded to Server Successfully", Toast.LENGTH_SHORT).show();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
                                         }
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Error: ", error.getMessage());
-                                Toast.makeText(ResultActivity.this,
-                                        "Can't connect to the *** server", Toast.LENGTH_SHORT).show();
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
                             }
-                        });
-                        RetryPolicy policy = new DefaultRetryPolicy(Constants.NETCONN_TIMEOUT_VALUE, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-                        req.setRetryPolicy(policy);
-                        // Log.i("**********", postRequest.toString());
-                        queue.add(req);
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[1]));
+                                    params.put("distance", Integer.toString(rightDistList[1]));
+                                    params.put("mId", "test-R-2");
+                                    params.put("rightEye", "true");
+                                    params.put("power", String.format("%.2f", rightPowerList[1]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[2]));
+                                    params.put("distance", Integer.toString(rightDistList[2]));
+                                    params.put("mId", "test-R-3");
+                                    params.put("rightEye", "true");
+                                    params.put("power", String.format("%.2f", rightPowerList[2]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[3]));
+                                    params.put("distance", Integer.toString(rightDistList[3]));
+                                    params.put("mId", "test-R-4");
+                                    params.put("rightEye", "true");
+                                    params.put("power", String.format("%.2f", rightPowerList[3]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[4]));
+                                    params.put("distance", Integer.toString(rightDistList[4]));
+                                    params.put("mId", "test-R-5");
+                                    params.put("rightEye", "true");
+                                    params.put("power", String.format("%.2f", rightPowerList[4]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[5]));
+                                    params.put("distance", Integer.toString(rightDistList[5]));
+                                    params.put("mId", "test-R-6");
+                                    params.put("rightEye", "true");
+                                    params.put("power", String.format("%.2f", rightPowerList[5]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[0]));
+                                    params.put("distance", Integer.toString(leftDistList[0]));
+                                    params.put("mId", "test-L-1");
+                                    params.put("rightEye", "false");
+                                    params.put("power", String.format("%.2f", leftPowerList[0]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[1]));
+                                    params.put("distance", Integer.toString(leftDistList[1]));
+                                    params.put("mId", "test-L-2");
+                                    params.put("rightEye", "false");
+                                    params.put("power", String.format("%.2f", leftPowerList[1]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[2]));
+                                    params.put("distance", Integer.toString(leftDistList[2]));
+                                    params.put("mId", "test-L-3");
+                                    params.put("rightEye", "false");
+                                    params.put("power", String.format("%.2f", leftPowerList[2]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[3]));
+                                    params.put("distance", Integer.toString(leftDistList[3]));
+                                    params.put("mId", "test-L-4");
+                                    params.put("rightEye", "false");
+                                    params.put("power", String.format("%.2f", leftPowerList[3]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[4]));
+                                    params.put("distance", Integer.toString(leftDistList[4]));
+                                    params.put("mId", "test-L-5");
+                                    params.put("rightEye", "false");
+                                    params.put("power", String.format("%.2f", leftPowerList[4]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                            postRequest = new StringRequest(Request.Method.POST, url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            // response
+                                            // isUploadComplete = true;
+                                            // Toast.makeText(ResultActivity.this,
+                                            // "Uploaded Measurement to Server Successfully", Toast.LENGTH_SHORT).show();
+                                            Log.d("Response", response);
+                                        }
+                                    }, new Response.ErrorListener() {
+
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    // error
+                                    Toast.makeText(ResultActivity.this,
+                                            "Can't connect to the server", Toast.LENGTH_SHORT).show();
+                                    Log.d("Error.Response", error.toString());
+                                }
+                            }
+                            ) {
+                                @Override
+                                protected Map<String, String> getParams() {
+                                    Map<String, String> params = new HashMap<String, String>();
+                                    params.put("angle", String.format("%.1f", angleList[5]));
+                                    params.put("distance", Integer.toString(leftDistList[5]));
+                                    params.put("mId", "test-L-6");
+                                    params.put("rightEye", "false");
+                                    params.put("power", String.format("%.2f", leftPowerList[5]));
+                                    params.put("subjectID", String.valueOf(subjectId));
+                                    params.put("testID", String.valueOf(idOne));
+                                    return params;
+                                }
+                            };
+                            queue.add(postRequest);
+
+                        }
                         */
-
-
 
                     } else
                         Toast.makeText(ResultActivity.this,

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class MainActivity extends Activity {
     // Inter Activity Parameters
     private static int subjectId;
     private static int deviceId;
+    private static int serverId;
 
     // Tag for log message
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -57,6 +59,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         subjectId = getIntent().getIntExtra("subjectId", 0);
         deviceId = getIntent().getIntExtra("deviceId", 0);
+        serverId = getIntent().getIntExtra("serverId", 0);
 
         switch (deviceId) {
             case 2:
@@ -94,6 +97,11 @@ public class MainActivity extends Activity {
         final TextView atv = (TextView) findViewById(R.id.angleText);
         final PatternView patternView = (PatternView) findViewById(R.id.drawView);
         final Pattern pattern = patternView.getPatternInstance();
+        AccormAnimation animation = new AccormAnimation(patternView, 120);
+        animation.setDuration(100);
+        animation.setRepeatCount(Animation.INFINITE);
+        patternView.startAnimation(animation);
+
         final TextView etv = (TextView) findViewById(R.id.eyeText);
         final SeekBar alignSeekBar = (SeekBar) findViewById(R.id.alignSeekBar);
         alignSeekBar.setMax(maxVal);
@@ -207,7 +215,7 @@ public class MainActivity extends Activity {
                     if (patternIndex == 5) {
                         try {
                             Thread.sleep(2000);                 //1000 milliseconds is one second.
-                        } catch(InterruptedException ex) {
+                        } catch (InterruptedException ex) {
                             Thread.currentThread().interrupt();
                         }
                         if(mp.isPlaying())
@@ -373,6 +381,7 @@ public class MainActivity extends Activity {
                 Intent resultIntent = new Intent(getBaseContext(), ResultActivity.class);
                 resultIntent.putExtra("subjectId", subjectId);
                 resultIntent.putExtra("deviceId", deviceId);
+                resultIntent.putExtra("serverId", serverId);
                 resultIntent.putExtra("ODS", results[0]);
                 resultIntent.putExtra("ODC", results[1]);
                 resultIntent.putExtra("ODA", (results[2]));

@@ -110,11 +110,6 @@ public class SubjectActivity extends Activity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        /*
-        listItems.add("John Serri");
-        listItems.add("George Skolianos");
-        */
         
         adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listItems);
         subjectListView.setAdapter(adapter);

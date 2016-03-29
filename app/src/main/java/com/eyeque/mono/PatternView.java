@@ -10,12 +10,19 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.util.Log;
+import android.graphics.RectF;
+import java.util.Calendar;
 
 public class PatternView extends View {
 
     private static int deviceId;
     private static Pattern pattern = new Pattern(0, 0);
     // private static boolean rotateCV = false;
+
+    private static final int START_ANGLE_POINT = 90;
+    private final Paint paint;
+    private float aniRadius;
+    private int aniColor;
 
     // Tag for log message
     private static final String TAG = PatternView.class.getSimpleName();
@@ -27,8 +34,15 @@ public class PatternView extends View {
         setBackgroundColor(Color.BLACK);
         invalidate();
 
-        /* Instantiate a new Pattern object */
-        // Pattern pattern = new Pattern(0, 0);
+        // Try animation
+        final int strokeWidth = 10;
+        paint = new Paint();
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(strokeWidth);
+        //Circle color
+        paint.setColor(Color.RED);
+
     }
 
     public void setDeviceId(int id) {
@@ -87,13 +101,26 @@ public class PatternView extends View {
             cv.rotate(0);
         }
 
+        // Draw Accormodation Pattern
+        p.setColor(Color.BLUE);  // p.setColor(getAniColor());
+        p.setStyle(Paint.Style.STROKE);
+        if (deviceId != 2) {
+            p.setStrokeWidth(5);
+            if (getAniRadius() > 20)
+                cv.drawCircle(720, 520, getAniRadius()-20, p);
+            cv.drawCircle(720, 520, getAniRadius(), p);
+        }
+        else {
+            p.setStrokeWidth(24);
+            cv.drawCircle(855, 520, getAniRadius(), p);
+        }
+
         p.setColor(Color.RED);
         if (deviceId == 2) {
             p.setStrokeWidth(12);
             cv.drawLine(pattern.getRedStartX()+12, pattern.getRedStartY()+148,
-                    pattern.getRedEndX()+12, pattern.getRedEndY(), p);
-        }
-        else
+                    pattern.getRedEndX() + 12, pattern.getRedEndY(), p);
+        } else
             p.setStrokeWidth(1);
         cv.drawLine(pattern.getRedStartX(), pattern.getRedStartY(),
                 pattern.getRedEndX(), pattern.getRedEndY(), p);
@@ -102,8 +129,8 @@ public class PatternView extends View {
         p.setColor(Color.GREEN);
         if (deviceId == 2) {
             p.setStrokeWidth(12);
-            cv.drawLine(pattern.getGreenStartX()-12, pattern.getGreenStartY(),
-                    pattern.getGreenEndX()-12, pattern.getGreenEndY()-148, p);
+            cv.drawLine(pattern.getGreenStartX() - 12, pattern.getGreenStartY(),
+                    pattern.getGreenEndX() - 12, pattern.getGreenEndY() - 148, p);
         }
         else
             p.setStrokeWidth(1);
@@ -117,9 +144,26 @@ public class PatternView extends View {
     public int getAngle() {
         return pattern.getAngle();
     }
+
+    public float getAniRadius() {
+        return aniRadius;
+    }
+    public void setAniRadius(float radius) {
+        this.aniRadius = radius;
+    }
+
+    public int getAniColor() {
+        return aniColor;
+    }
+    public void setAniColor(int value) {
+        this.aniColor = value;
+    }
+
+
     public int getDistance() {
         return pattern.getDistance();
     }
+    public int getDeviceId() { return deviceId; }
     public Pattern getPatternInstance() {
         return pattern;
     }

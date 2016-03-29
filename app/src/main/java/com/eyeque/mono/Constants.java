@@ -7,15 +7,17 @@ import android.provider.BaseColumns;
 
 public class Constants {
 
-    public final static String BuildNumber = "0.8.4";
+    public final static String BuildNumber = "0.8.5";
+
+    public static final double PI = 3.141592653589793d;
 
     // Restful API Call Base URL Address
     public static String RestfulBaseURL = null;
     public final static String LocalRestfulBaseURL = "http://192.168.110.122:8080";
     public final static String AwsEc2RestfulBaseURL = "http://54.191.245.62:8080";
     // public final static String LocalRestfulBaseURL = "http://192.168.110.85:8080";
-    // public final static String AccessToken = "t7n7b979t0r9d2umcvs97sdnun6ba6q2";
-    public final static String AccessToken = "472h0onmgk3o18bn8kj629m8s2tke6k0";
+    public final static String AccessToken = "e46cghc52pqd8kvgqmv8ovsi1ufcfetg";
+    // public final static String AccessToken = "472h0onmgk3o18bn8kj629m8s2tke6k0";
 
     public final static int NETCONN_TIMEOUT_VALUE = 5000;
 

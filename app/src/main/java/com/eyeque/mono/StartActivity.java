@@ -55,8 +55,12 @@ public class StartActivity extends Activity {
             NetConnection conn = new NetConnection();
             if (conn.isConnected(getApplicationContext())) {
                 try {
-                    // URL url = new URL(Constants.RestfulBaseURL + "/eyecloud/api/subjects");
-                    URL url = new URL(Constants.RestfulBaseURL + "/eyecloud/api/subjects?access_token=" + Constants.AccessToken);
+                    String urlString;
+                    // if (serverId == 0)
+                        // urlString = Constants.RestfulBaseURL + "/eyecloud/api/subjects";
+                    // else
+                        urlString = Constants.RestfulBaseURL + "/eyecloud/api/subjects?access_token=" + Constants.AccessToken;
+                    URL url = new URL(urlString);
                     HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                     urlConnection.setConnectTimeout(Constants.NETCONN_TIMEOUT_VALUE);
                     urlConnection.setReadTimeout(Constants.NETCONN_TIMEOUT_VALUE);
@@ -73,6 +77,9 @@ public class StartActivity extends Activity {
                     } finally {
                         urlConnection.disconnect();
                     }
+                } catch (java.net.MalformedURLException e) {
+                    Log.e("URL ERROR", e.getMessage(), e);
+                    return null;
                 } catch (Exception e) {
                     Log.e("ERROR", e.getMessage(), e);
                     return null;
@@ -149,6 +156,7 @@ public class StartActivity extends Activity {
                     Intent i = new Intent(getBaseContext(), MainActivity.class);
                     i.putExtra("subjectId", subjectId);
                     i.putExtra("deviceId", deviceId);
+                    i.putExtra("serverId", serverId);
                     startActivity(i);
                 } else {
                     Toast.makeText(StartActivity.this,
@@ -181,6 +189,12 @@ public class StartActivity extends Activity {
             }
         });
 
+        // Constants.RestfulBaseURL = Constants.LocalRestfulBaseURL;
+
+        /* Point the backend server to Amazon server */
+        Constants.RestfulBaseURL = Constants.AwsEc2RestfulBaseURL;
+
+        /*
         serverButton = (Button) findViewById(R.id.serverButton);
         Constants.RestfulBaseURL = Constants.LocalRestfulBaseURL;
         server = "Internal";
@@ -193,6 +207,7 @@ public class StartActivity extends Activity {
                 startActivityForResult(serverIntent, 300);
             }
         });
+        */
 
         subjectButton = (Button) findViewById(R.id.subjectButton);
         loadingBar = (View) findViewById(R.id.loadingPanel);
@@ -228,6 +243,7 @@ public class StartActivity extends Activity {
                     subjectButton.setTextSize(18);
                 }
                 break;
+            /*
             case 300:
                 if (resultCode == RESULT_OK) {
                     server = data.getStringExtra("result");
@@ -240,6 +256,7 @@ public class StartActivity extends Activity {
                     serverButton.setTextSize(18);
                 }
                 break;
+              */
             default:
                 break;
         }
