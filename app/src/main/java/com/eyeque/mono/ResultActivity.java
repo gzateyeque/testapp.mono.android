@@ -42,14 +42,15 @@ public class ResultActivity extends Activity {
     private static double osCyl;
     private static double osAxis;
     private static double osSe;
-    private static double[] angleList = {0, 0, 0, 0, 0, 0};
-    private static double[] leftPowerList = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    private static double[] rightPowerList = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
-    private static int[] rightDistList = {0, 0, 0, 0, 0, 0};
-    private static int[] leftDistList = {0, 0, 0, 0, 0, 0};
+    private static double[] angleList = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private static double[] leftPowerList = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    private static double[] rightPowerList = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+    private static int[] rightDistList = {0, 0, 0, 0, 0, 0, 0, 0, 0};
+    private static int[] leftDistList = {0, 0, 0, 0, 0, 0, 0, 0, 0};
     private static String mStr;
     private static boolean netLinkStatus = true;
     boolean isUploadComplete = false;
+    private static int numMeasurement;
 
     // Tag for log message
     private static final String TAG = ResultActivity.class.getSimpleName();
@@ -62,6 +63,11 @@ public class ResultActivity extends Activity {
         subjectId = getIntent().getIntExtra("subjectId", 0);
         deviceId = getIntent().getIntExtra("deviceId", 0);
         serverId = getIntent().getIntExtra("serverId", 0);
+
+        if (deviceId == 2)
+            numMeasurement = 9;
+        else
+            numMeasurement = 6;
 
         odSph = getIntent().getDoubleExtra("ODS", 0.00);
         odCyl = getIntent().getDoubleExtra("ODC", 0.00);
@@ -94,12 +100,24 @@ public class ResultActivity extends Activity {
         angleList[4] = getIntent().getDoubleExtra("Angle-5", 0.00);
         angleList[5] = getIntent().getDoubleExtra("Angle-6", 0.00);
 
+        if (deviceId == 2) {
+            angleList[6] = getIntent().getDoubleExtra("Angle-7", 0.00);
+            angleList[7] = getIntent().getDoubleExtra("Angle-8", 0.00);
+            angleList[8] = getIntent().getDoubleExtra("Angle-9", 0.00);
+        }
+
         leftPowerList[0] = getIntent().getDoubleExtra("L-Power-1", 0.00);
         leftPowerList[1] = getIntent().getDoubleExtra("L-Power-2", 0.00);
         leftPowerList[2] = getIntent().getDoubleExtra("L-Power-3", 0.00);
         leftPowerList[3] = getIntent().getDoubleExtra("L-Power-4", 0.00);
         leftPowerList[4] = getIntent().getDoubleExtra("L-Power-5", 0.00);
         leftPowerList[5] = getIntent().getDoubleExtra("L-Power-6", 0.00);
+
+        if (deviceId == 2) {
+            leftPowerList[6] = getIntent().getDoubleExtra("L-Power-7", 0.00);
+            leftPowerList[7] = getIntent().getDoubleExtra("L-Power-8", 0.00);
+            leftPowerList[8] = getIntent().getDoubleExtra("L-Power-9", 0.00);
+        }
 
         rightPowerList[0] = getIntent().getDoubleExtra("R-Power-1", 0.00);
         rightPowerList[1] = getIntent().getDoubleExtra("R-Power-2", 0.00);
@@ -108,12 +126,24 @@ public class ResultActivity extends Activity {
         rightPowerList[4] = getIntent().getDoubleExtra("R-Power-5", 0.00);
         rightPowerList[5] = getIntent().getDoubleExtra("R-Power-6", 0.00);
 
+        if (deviceId == 2) {
+            rightPowerList[6] = getIntent().getDoubleExtra("R-Power-7", 0.00);
+            rightPowerList[7] = getIntent().getDoubleExtra("R-Power-8", 0.00);
+            rightPowerList[8] = getIntent().getDoubleExtra("R-Power-9", 0.00);
+        }
+
         leftDistList[0] = getIntent().getIntExtra("L-Dist-1", 0);
         leftDistList[1] = getIntent().getIntExtra("L-Dist-2", 1);
         leftDistList[2] = getIntent().getIntExtra("L-Dist-3", 2);
         leftDistList[3] = getIntent().getIntExtra("L-Dist-4", 3);
         leftDistList[4] = getIntent().getIntExtra("L-Dist-5", 4);
         leftDistList[5] = getIntent().getIntExtra("L-Dist-6", 5);
+
+        if (deviceId == 2) {
+            leftDistList[6] = getIntent().getIntExtra("L-Dist-7", 6);
+            leftDistList[7] = getIntent().getIntExtra("L-Dist-8", 7);
+            leftDistList[8] = getIntent().getIntExtra("L-Dist-9", 8);
+        }
 
         rightDistList[0] = getIntent().getIntExtra("R-Dist-1", 0);
         rightDistList[1] = getIntent().getIntExtra("R-Dist-2", 1);
@@ -122,12 +152,21 @@ public class ResultActivity extends Activity {
         rightDistList[4] = getIntent().getIntExtra("R-Dist-5", 4);
         rightDistList[5] = getIntent().getIntExtra("R-Dist-6", 5);
 
+        if (deviceId == 2) {
+            rightDistList[6] = getIntent().getIntExtra("R-Dist-7", 6);
+            rightDistList[7] = getIntent().getIntExtra("R-Dist-8", 7);
+            rightDistList[8] = getIntent().getIntExtra("R-Dist-9", 8);
+        }
+
         final TextView l1TextView = (TextView) findViewById(R.id.l1TextView);
         final TextView l2TextView = (TextView) findViewById(R.id.l2TextView);
         final TextView l3TextView = (TextView) findViewById(R.id.l3TextView);
         final TextView l4TextView = (TextView) findViewById(R.id.l4TextView);
         final TextView l5TextView = (TextView) findViewById(R.id.l5TextView);
         final TextView l6TextView = (TextView) findViewById(R.id.l6TextView);
+        final TextView l7TextView = (TextView) findViewById(R.id.l7TextView);
+        final TextView l8TextView = (TextView) findViewById(R.id.l8TextView);
+        final TextView l9TextView = (TextView) findViewById(R.id.l9TextView);
 
         mStr = String.format("%.2f", leftPowerList[0]) + " " + String.format("%.1f", angleList[0]) + (char) 0x00B0;
         l1TextView.setText(mStr);
@@ -142,12 +181,24 @@ public class ResultActivity extends Activity {
         mStr = String.format("%.2f", leftPowerList[5]) + " " + String.format("%.1f", angleList[5]) + (char) 0x00B0;
         l6TextView.setText(mStr);
 
+        if (deviceId == 2) {
+            mStr = String.format("%.2f", leftPowerList[6]) + " " + String.format("%.1f", angleList[6]) + (char) 0x00B0;
+            l7TextView.setText(mStr);
+            mStr = String.format("%.2f", leftPowerList[7]) + " " + String.format("%.1f", angleList[7]) + (char) 0x00B0;
+            l8TextView.setText(mStr);
+            mStr = String.format("%.2f", leftPowerList[8]) + " " + String.format("%.1f", angleList[8]) + (char) 0x00B0;
+            l9TextView.setText(mStr);
+        }
+
         final TextView r1TextView = (TextView) findViewById(R.id.r1TextView);
         final TextView r2TextView = (TextView) findViewById(R.id.r2TextView);
         final TextView r3TextView = (TextView) findViewById(R.id.r3TextView);
         final TextView r4TextView = (TextView) findViewById(R.id.r4TextView);
         final TextView r5TextView = (TextView) findViewById(R.id.r5TextView);
         final TextView r6TextView = (TextView) findViewById(R.id.r6TextView);
+        final TextView r7TextView = (TextView) findViewById(R.id.r7TextView);
+        final TextView r8TextView = (TextView) findViewById(R.id.r8TextView);
+        final TextView r9TextView = (TextView) findViewById(R.id.r9TextView);
 
         mStr = String.format("%.2f", rightPowerList[0]) + " " + String.format("%.1f", angleList[0]) + (char) 0x00B0;
         r1TextView.setText(mStr);
@@ -161,6 +212,15 @@ public class ResultActivity extends Activity {
         r5TextView.setText(mStr);
         mStr = String.format("%.2f", rightPowerList[5]) + " " + String.format("%.1f", angleList[5]) + (char) 0x00B0;
         r6TextView.setText(mStr);
+
+        if (deviceId == 2) {
+            mStr = String.format("%.2f", rightPowerList[6]) + " " + String.format("%.1f", angleList[6]) + (char) 0x00B0;
+            r7TextView.setText(mStr);
+            mStr = String.format("%.2f", rightPowerList[7]) + " " + String.format("%.1f", angleList[7]) + (char) 0x00B0;
+            r8TextView.setText(mStr);
+            mStr = String.format("%.2f", rightPowerList[8]) + " " + String.format("%.1f", angleList[8]) + (char) 0x00B0;
+            r9TextView.setText(mStr);
+        }
 
         uploadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -206,7 +266,7 @@ public class ResultActivity extends Activity {
 
                             // if (serverId > 0) {
                                 JSONArray mDataArr = new JSONArray();
-                                for (int i = 0; i < 6; i++) {
+                                for (int i = 0; i < numMeasurement; i++) {
                                     JSONObject mDataObj = new JSONObject();
                                     mDataObj.put("angle", String.format("%.1f", angleList[i]));
                                     mDataObj.put("distance", Integer.toString(rightDistList[i]));
@@ -218,7 +278,7 @@ public class ResultActivity extends Activity {
                                     mDataObj.put("testID", String.valueOf(idOne));
                                     mDataArr.put(mDataObj);
                                 }
-                                for (int i = 0; i < 6; i++) {
+                                for (int i = 0; i < numMeasurement; i++) {
                                     JSONObject mDataObj = new JSONObject();
                                     mDataObj.put("angle", String.format("%.1f", angleList[i]));
                                     mDataObj.put("distance", Integer.toString(leftDistList[i]));

@@ -212,7 +212,7 @@ public class MainActivity extends Activity {
                         }
                     }
 
-                    if (patternIndex == 5) {
+                    if ((deviceId != 2 && patternIndex == 5) || (deviceId == 2 && patternIndex == 8)) {
                         try {
                             Thread.sleep(2000);                 //1000 milliseconds is one second.
                         } catch (InterruptedException ex) {
@@ -404,12 +404,24 @@ public class MainActivity extends Activity {
                 resultIntent.putExtra("Angle-5", patternCalcAngleList[4]);
                 resultIntent.putExtra("Angle-6", patternCalcAngleList[5]);
 
+                if (deviceId == 2) {
+                    resultIntent.putExtra("Angle-7", patternCalcAngleList[6]);
+                    resultIntent.putExtra("Angle-8", patternCalcAngleList[7]);
+                    resultIntent.putExtra("Angle-9", patternCalcAngleList[8]);
+                }
+
                 resultIntent.putExtra("L-Power-1", leftPowerList[0]);
                 resultIntent.putExtra("L-Power-2", leftPowerList[1]);
                 resultIntent.putExtra("L-Power-3", leftPowerList[2]);
                 resultIntent.putExtra("L-Power-4", leftPowerList[3]);
                 resultIntent.putExtra("L-Power-5", leftPowerList[4]);
                 resultIntent.putExtra("L-Power-6", leftPowerList[5]);
+
+                if (deviceId == 2) {
+                    resultIntent.putExtra("L-Power-7", leftPowerList[6]);
+                    resultIntent.putExtra("L-Power-8", leftPowerList[7]);
+                    resultIntent.putExtra("L-Power-9", leftPowerList[8]);
+                }
 
                 resultIntent.putExtra("R-Power-1", rightPowerList[0]);
                 resultIntent.putExtra("R-Power-2", rightPowerList[1]);
@@ -418,6 +430,12 @@ public class MainActivity extends Activity {
                 resultIntent.putExtra("R-Power-5", rightPowerList[4]);
                 resultIntent.putExtra("R-Power-6", rightPowerList[5]);
 
+                if (deviceId == 2) {
+                    resultIntent.putExtra("R-Power-7", rightPowerList[6]);
+                    resultIntent.putExtra("R-Power-8", rightPowerList[7]);
+                    resultIntent.putExtra("R-Power-9", rightPowerList[8]);
+                }
+
                 resultIntent.putExtra("L-Dist-1", leftDistList[0]);
                 resultIntent.putExtra("L-Dist-2", leftDistList[1]);
                 resultIntent.putExtra("L-Dist-3", leftDistList[2]);
@@ -425,12 +443,24 @@ public class MainActivity extends Activity {
                 resultIntent.putExtra("L-Dist-5", leftDistList[4]);
                 resultIntent.putExtra("L-Dist-6", leftDistList[5]);
 
+                if (deviceId == 2) {
+                    resultIntent.putExtra("L-Dist-7", leftDistList[6]);
+                    resultIntent.putExtra("L-Dist-8", leftDistList[7]);
+                    resultIntent.putExtra("L-Dist-9", leftDistList[8]);
+                }
+
                 resultIntent.putExtra("R-Dist-1", rightDistList[0]);
                 resultIntent.putExtra("R-Dist-2", rightDistList[1]);
                 resultIntent.putExtra("R-Dist-3", rightDistList[2]);
                 resultIntent.putExtra("R-Dist-4", rightDistList[3]);
                 resultIntent.putExtra("R-Dist-5", rightDistList[4]);
                 resultIntent.putExtra("R-Dist-6", rightDistList[5]);
+
+                if (deviceId == 2) {
+                    resultIntent.putExtra("R-Dist-7", rightDistList[6]);
+                    resultIntent.putExtra("R-Dist-8", rightDistList[7]);
+                    resultIntent.putExtra("R-Dist-9", rightDistList[8]);
+                }
 
                 Log.i("MA-OD Spherical:  ", Double.toString(results[0]));
                 Log.i("MA-OD Cylindrical:  ", Double.toString(results[1]));

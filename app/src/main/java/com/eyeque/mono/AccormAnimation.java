@@ -61,7 +61,7 @@ public class AccormAnimation extends Animation {
             float radiansToDraw =  (float) ((2 * Constants.PI)* (float) 0.4) * elapsedTime;
             double rColor= 0.5*(0.4+ii/50)*(1.0-1.0* (Math.cos((double) (2 * Constants.PI * (radiansToDraw + ii * ((1 - ii / 150) * 0.01 + 0.04))))));
 
-            Log.i("***BLUE COLOR***", Float.toString(ii) +" " + String.format("%.2f", rColor));
+            // Log.i("***BLUE COLOR***", Float.toString(ii) +" " + String.format("%.2f", rColor));
             circle.setAniColor((int) rColor);
             circle.requestLayout();
         } catch (java.text.ParseException e) {
