@@ -287,7 +287,6 @@
                 <TableRow
                     android:id="@+id/line6TableRow"
                     android:layout_width="0dp"
-                    android:layout_marginBottom="10dp"
                     android:layout_height="wrap_content" >
 
                     <TextView
@@ -299,6 +298,64 @@
                     <TextView
                         android:id="@+id/r6TextView"
                         android:text="-0.04 45&#176;"
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/line7TableRow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/l7TextView"
+                        android:text=""
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/r7TextView"
+                        android:text=""
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/line8TableRow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/l8TextView"
+                        android:text=""
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/r8TextView"
+                        android:text=""
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/line9TableRow"
+                    android:layout_width="0dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/l9TextView"
+                        android:text=""
+                        android:gravity="center"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/r9TextView"
+                        android:text=""
                         android:gravity="center"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
