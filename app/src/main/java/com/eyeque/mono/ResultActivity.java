@@ -272,6 +272,7 @@ public class ResultActivity extends Activity {
                                     mDataObj.put("distance", Integer.toString(rightDistList[i]));
                                     String mIdStr = "R-" + Integer.toString(i);
                                     mDataObj.put("mId", mIdStr);
+                                    mDataObj.put("rightEye", 1);
                                     // mDataObj.put("rightEye", "true");
                                     mDataObj.put("power", String.format("%.2f", rightPowerList[i]));
                                     mDataObj.put("subjectID", String.valueOf(subjectId));
@@ -284,6 +285,7 @@ public class ResultActivity extends Activity {
                                     mDataObj.put("distance", Integer.toString(leftDistList[i]));
                                     String mIdStr = "L-" + Integer.toString(i);
                                     mDataObj.put("mId", mIdStr);
+                                    mDataObj.put("rightEye", 0);
                                     // mDataObj.put("rightEye", "true");
                                     mDataObj.put("power", String.format("%.2f", leftPowerList[i]));
                                     mDataObj.put("subjectID", String.valueOf(subjectId));
