@@ -662,7 +662,7 @@ public class Pattern {
         allResults[3] = results[3];
 
         if (deviceId == 2)
-            results =  curveFitting(patternCalcAngleList, leftPowerValueList, 6);
+            results =  curveFitting(patternCalcAngleList, leftPowerValueList, 9);
         else
             results =  curveFitting(patternCalcAngleList, leftPowerValueList, 6);
 
