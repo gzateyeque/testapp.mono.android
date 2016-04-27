@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
         patternView = (PatternView) findViewById(R.id.drawView);
         pattern = patternView.getPatternInstance();
         patternView.setDeviceId((int) deviceId);
-        pattern.start();
+        patternView.start();
         AccormAnimation animation = new AccormAnimation(patternView);
         seconds = System.currentTimeMillis();
         animation.setDuration(seconds);
@@ -255,7 +255,7 @@ public class MainActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                // patternView.nextPattern();
+                patternView.nextPattern();
                 dtv.setText("Distance: " + String.valueOf(pattern.getDistance()));
                 atv.setText("Angle: " + String.valueOf(pattern.getAngle()) + (char) 0x00B0);
                 DecimalFormat precision = new DecimalFormat("#.##");
@@ -279,7 +279,7 @@ public class MainActivity extends Activity {
                 Log.i(TAG, "Closer Button clicked.");
                 int lineSpace = pattern.getDistance();
                 if (lineSpace >= minVal + 1) {
-                    // patternView.closerDraw(1);
+                    patternView.closerDraw(1);
                     dtv.setText("Distance: " + String.valueOf(pattern.getDistance()));
                     DecimalFormat precision = new DecimalFormat("#.##");
                     Double i2 = Double.valueOf(precision.format(pattern.getPowerValue()));
@@ -319,7 +319,7 @@ public class MainActivity extends Activity {
                 Log.i("MyActivity", "Further Button clicked.");
                 int lineSpace = pattern.getDistance();
                 if (lineSpace <= minVal + maxVal - 1) {
-                    // patternView.furtherDraw(1);
+                    patternView.furtherDraw(1);
                     dtv.setText("Distance: " + String.valueOf(pattern.getDistance()));
                     DecimalFormat precision = new DecimalFormat("#.##");
                     Double i2 = Double.valueOf(precision.format(pattern.getPowerValue()));
