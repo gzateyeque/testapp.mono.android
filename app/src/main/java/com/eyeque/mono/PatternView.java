@@ -20,9 +20,10 @@ public class PatternView extends View {
     // private static boolean rotateCV = false;
 
     private static final int START_ANGLE_POINT = 90;
-    private final Paint paint;
+    private final Paint p;
     private float aniRadius;
     private int aniColor;
+    private double radiansToDraw;
 
     // Tag for log message
     private static final String TAG = PatternView.class.getSimpleName();
@@ -36,12 +37,12 @@ public class PatternView extends View {
 
         // Try animation
         final int strokeWidth = 10;
-        paint = new Paint();
-        paint.setAntiAlias(true);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(strokeWidth);
+        p = new Paint();
+        p.setAntiAlias(true);
+        p.setStyle(Paint.Style.STROKE);
+        p.setStrokeWidth(strokeWidth);
         //Circle color
-        paint.setColor(Color.RED);
+        p.setColor(Color.RED);
 
     }
 
@@ -74,10 +75,12 @@ public class PatternView extends View {
 
     @Override
     protected void onDraw(Canvas cv) {
-
+        int color;
+        double rColor = 1;
         // cv.drawColor(Color.WHITE);
-        Paint p = new Paint();
+        // Paint p = new Paint();
         // Log.i("OnDraw", "drawType = " + String.valueOf(getDrawType()));
+
 
         // Draw Square
         if (deviceId == 2) {
@@ -90,35 +93,51 @@ public class PatternView extends View {
             cv.drawRect(720 - sqrHalfSize + 10, 520 - sqrHalfSize + 10, 720 + sqrHalfSize - 10, 520 + sqrHalfSize - 10, p);
         }
 
+
         if (pattern.getPattenIndex() > 0) {
             int angle = pattern.getRotateAngle();
-            Log.i("PV-INFO", String.valueOf(angle));
             cv.save();
             cv.rotate(angle, 720, 520);
-        }
-        else {
+        } else {
             cv.save();
             cv.rotate(0);
         }
 
+
         // Draw Accormodation Pattern
-        p.setColor(Color.BLUE);  // p.setColor(getAniColor());
-        p.setStyle(Paint.Style.STROKE);
-        if (deviceId != 2) {
-            p.setStrokeWidth(5);
-            if (getAniRadius() > 20)
-                cv.drawCircle(720, 520, getAniRadius()-20, p);
-            cv.drawCircle(720, 520, getAniRadius(), p);
-        }
-        else {
-            p.setStrokeWidth(24);
-            cv.drawCircle(855, 520, getAniRadius(), p);
+        /***
+         p.setColor(Color.BLUE);  // p.setColor(getAniColor());
+         p.setStyle(Paint.Style.STROKE);
+         if (deviceId != 2) {
+         p.setStrokeWidth(5);
+         if (getAniRadius() > 20)
+         cv.drawCircle(720, 520, getAniRadius()-20, p);
+         cv.drawCircle(720, 520, getAniRadius(), p);
+         }
+         else {
+         p.setStrokeWidth(24);
+         cv.drawCircle(855, 520, getAniRadius(), p);
+         }
+         ***/
+
+        for (float ii = 150; ii >= 0; ii -= 1) {
+            cv.save();
+            aniRadius = ii + 20;
+            rColor = 0.5 * (0.4 + ii / 50f) * (1.0 - 1.0 * (Math.cos((double) (2 * Constants.PI * (radiansToDraw + ii * ((1 - ii / 150f) * 0.0025 + 0.04))))));
+            color = Color.rgb(0, 0, (int) (rColor * 255 / 2));
+            p.setColor(color);
+            p.setStrokeWidth(12);
+            // Log.i("DEBUG", String.valueOf(ii));
+            if (deviceId != 2)
+                cv.drawCircle(720, 520, ii, p);
+            else
+                cv.drawCircle(855, 520, ii, p);
         }
 
         p.setColor(Color.RED);
         if (deviceId == 2) {
             p.setStrokeWidth(12);
-            cv.drawLine(pattern.getRedStartX()+12, pattern.getRedStartY()+148,
+            cv.drawLine(pattern.getRedStartX() + 12, pattern.getRedStartY() + 148,
                     pattern.getRedEndX() + 12, pattern.getRedEndY(), p);
         } else
             p.setStrokeWidth(1);
@@ -131,14 +150,11 @@ public class PatternView extends View {
             p.setStrokeWidth(12);
             cv.drawLine(pattern.getGreenStartX() - 12, pattern.getGreenStartY(),
                     pattern.getGreenEndX() - 12, pattern.getGreenEndY() - 148, p);
-        }
-        else
+        } else
             p.setStrokeWidth(1);
         cv.drawLine(pattern.getGreenStartX(), pattern.getGreenStartY(),
                 pattern.getGreenEndX(), pattern.getGreenEndY(), p);
 
-
-        cv.restore();
     }
 
     public int getAngle() {
@@ -159,6 +175,10 @@ public class PatternView extends View {
         this.aniColor = value;
     }
 
+    public void setradians(double value) {
+
+        this.radiansToDraw = value;
+    }
 
     public int getDistance() {
         return pattern.getDistance();
