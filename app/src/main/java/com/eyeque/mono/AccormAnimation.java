@@ -10,6 +10,8 @@ import java.util.Date;
 /**
  * Created by georgez on 3/21/16.
  */
+
+/****
 public class AccormAnimation extends Animation {
     private PatternView circle;
 
@@ -33,11 +35,6 @@ public class AccormAnimation extends Animation {
     protected void applyTransformation(float interpolatedTime, Transformation transformation) {
         float angle = oldAngle + ((ii - oldAngle) * interpolatedTime);
 
-        /*
-        ii += 1f;
-        if (ii >= 100)
-            ii = 1f;
-        */
         int deviceId = circle.getDeviceId();
 
         if (deviceId == 2) {
@@ -70,3 +67,32 @@ public class AccormAnimation extends Animation {
     }
 
 }
+ ***/
+
+public class AccormAnimation extends Animation {
+    private PatternView pv;
+    private int type;
+    long seconds;
+
+
+    private float ii = 100f;
+
+    public AccormAnimation(PatternView circle) {
+        this.pv = circle;
+        ii = 100f;
+        type = 1;
+    }
+
+    @Override
+    protected void applyTransformation(float interpolatedTime, Transformation transformation) {
+
+        double elapsedTime= (double) (-(seconds-System.currentTimeMillis())/5000f);
+        double radiansToDraw = (double) ((2 * Constants.PI) * (double) 0.4) * elapsedTime;
+        pv.setradians((double) radiansToDraw);
+        pv.requestLayout();
+
+    }
+    public void setseconds(long value){this.seconds=value;}
+
+}
+

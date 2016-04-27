@@ -44,6 +44,7 @@ public class MainActivity extends Activity {
     private static int subjectId;
     private static int deviceId;
     private static int serverId;
+    long seconds;
 
     // Tag for log message
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -95,10 +96,16 @@ public class MainActivity extends Activity {
         final TextView tv = (TextView) findViewById(R.id.powerText);
         final TextView dtv = (TextView) findViewById(R.id.distText);
         final TextView atv = (TextView) findViewById(R.id.angleText);
-        final PatternView patternView = (PatternView) findViewById(R.id.drawView);
-        final Pattern pattern = patternView.getPatternInstance();
-        AccormAnimation animation = new AccormAnimation(patternView, 120);
-        animation.setDuration(100);
+        // final PatternView patternView = (PatternView) findViewById(R.id.drawView);
+        // final Pattern pattern = patternView.getPatternInstance();
+        patternView = (PatternView) findViewById(R.id.drawView);
+        pattern = patternView.getPatternInstance();
+        patternView.setDeviceId((int) deviceId);
+        pattern.start();
+        AccormAnimation animation = new AccormAnimation(patternView);
+        seconds = System.currentTimeMillis();
+        animation.setDuration(seconds);
+        animation.setseconds(seconds);
         animation.setRepeatCount(Animation.INFINITE);
         patternView.startAnimation(animation);
 
@@ -108,8 +115,7 @@ public class MainActivity extends Activity {
         prevStopValue = maxVal;
         alignSeekBar.setProgress(maxVal);
 
-        patternView.setDeviceId((int) deviceId);
-        patternView.start();
+
         dtv.setText("Distance: " + String.valueOf(pattern.getDistance()));
         atv.setText("Angle: " + String.valueOf(patternView.getAngle()) + (char) 0x00B0);
         DecimalFormat precision = new DecimalFormat("#.##");
@@ -249,7 +255,7 @@ public class MainActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                patternView.nextPattern();
+                // patternView.nextPattern();
                 dtv.setText("Distance: " + String.valueOf(pattern.getDistance()));
                 atv.setText("Angle: " + String.valueOf(pattern.getAngle()) + (char) 0x00B0);
                 DecimalFormat precision = new DecimalFormat("#.##");
@@ -273,7 +279,7 @@ public class MainActivity extends Activity {
                 Log.i(TAG, "Closer Button clicked.");
                 int lineSpace = pattern.getDistance();
                 if (lineSpace >= minVal + 1) {
-                    patternView.closerDraw(1);
+                    // patternView.closerDraw(1);
                     dtv.setText("Distance: " + String.valueOf(pattern.getDistance()));
                     DecimalFormat precision = new DecimalFormat("#.##");
                     Double i2 = Double.valueOf(precision.format(pattern.getPowerValue()));
@@ -313,7 +319,7 @@ public class MainActivity extends Activity {
                 Log.i("MyActivity", "Further Button clicked.");
                 int lineSpace = pattern.getDistance();
                 if (lineSpace <= minVal + maxVal - 1) {
-                    patternView.furtherDraw(1);
+                    // patternView.furtherDraw(1);
                     dtv.setText("Distance: " + String.valueOf(pattern.getDistance()));
                     DecimalFormat precision = new DecimalFormat("#.##");
                     Double i2 = Double.valueOf(precision.format(pattern.getPowerValue()));
@@ -482,7 +488,7 @@ public class MainActivity extends Activity {
     }
 
     public void closerLongPressedAction() {
-        final PatternView patternView = (PatternView) findViewById(R.id.drawView);
+        // final PatternView patternView = (PatternView) findViewById(R.id.drawView);
         final TextView tv = (TextView) findViewById(R.id.powerText);
         final Pattern pattern = patternView.getPatternInstance();
         final TextView dtv = (TextView) findViewById(R.id.distText);
@@ -499,7 +505,7 @@ public class MainActivity extends Activity {
     }
 
     public void furtherLongPressedAction() {
-        final PatternView patternView = (PatternView) findViewById(R.id.drawView);
+        // final PatternView patternView = (PatternView) findViewById(R.id.drawView);
         final TextView tv = (TextView) findViewById(R.id.powerText);
         final Pattern pattern = patternView.getPatternInstance();
         final TextView dtv = (TextView) findViewById(R.id.distText);
@@ -517,9 +523,9 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        final PatternView patternView = (PatternView) findViewById(R.id.drawView);
+        // final PatternView patternView = (PatternView) findViewById(R.id.drawView);
         final TextView tv = (TextView) findViewById(R.id.powerText);
-        final Pattern pattern = patternView.getPatternInstance();
+        // pattern = patternView.getPatternInstance();
         final TextView dtv = (TextView) findViewById(R.id.distText);
         final SeekBar alignSeekBar = (SeekBar) findViewById(R.id.alignSeekBar);
 
