@@ -120,18 +120,21 @@ public class PatternView extends View {
          }
          ***/
 
-        for (float ii = 150; ii >= 0; ii -= 1) {
-            cv.save();
+        for (float ii = 150; ii >= 0; ii -= 0.5) {
+            // cv.save();
             aniRadius = ii + 20;
-            rColor = 0.5 * (0.4 + ii / 50f) * (1.0 - 1.0 * (Math.cos((double) (2 * Constants.PI * (radiansToDraw + ii * ((1 - ii / 150f) * 0.0025 + 0.04))))));
-            color = Color.rgb(0, 0, (int) (rColor * 255 / 2));
+            rColor = 0.5 * (0.4 + ii / 125f) * (1.0 - 1.0 * (Math.cos((double) (2 * Constants.PI * (radiansToDraw + ii * ((1 - ii / 125f) * 0.005 + 0.015))))));
+            rColor=rColor * 255;
+            if(rColor>255)
+                rColor=255;
+            color = Color.rgb(0, 0, (int) (rColor));
             p.setColor(color);
-            p.setStrokeWidth(12);
             // Log.i("DEBUG", String.valueOf(ii));
-            if (deviceId != 2)
-                cv.drawCircle(720, 520, ii, p);
-            else
+
+            if (deviceId == 2)
                 cv.drawCircle(855, 520, ii, p);
+            else
+                cv.drawCircle(720, 520, ii, p);
         }
 
         p.setColor(Color.RED);
@@ -139,6 +142,8 @@ public class PatternView extends View {
             p.setStrokeWidth(12);
             cv.drawLine(pattern.getRedStartX() + 12, pattern.getRedStartY() + 148,
                     pattern.getRedEndX() + 12, pattern.getRedEndY(), p);
+            // cv.drawLine(pattern.getRedStartX() - 50, pattern.getRedStartY(),
+                    // pattern.getRedEndX()-1, pattern.getRedStartY(), p);
         } else
             p.setStrokeWidth(1);
         cv.drawLine(pattern.getRedStartX(), pattern.getRedStartY(),
@@ -150,6 +155,8 @@ public class PatternView extends View {
             p.setStrokeWidth(12);
             cv.drawLine(pattern.getGreenStartX() - 12, pattern.getGreenStartY(),
                     pattern.getGreenEndX() - 12, pattern.getGreenEndY() - 148, p);
+            // cv.drawLine(pattern.getGreenStartX() + 1, pattern.getGreenStartY(),
+                    // pattern.getGreenEndX() + 50, pattern.getGreenStartY(), p);
         } else
             p.setStrokeWidth(1);
         cv.drawLine(pattern.getGreenStartX(), pattern.getGreenStartY(),
