@@ -259,7 +259,7 @@ public class ResultActivity extends Activity {
                             else
                                 params.put("deviceName", "Device 1");
                             params.put("phoneType", "Galaxy 6");
-                            params.put("accomodationPatternName", "G5");
+                            params.put("accomodationPatternName", "AP5G");
                             params.put("beamSplitter", "false");
                             params.put("originalTestResultID", idOne);
                             params.put("subjectID", String.valueOf(subjectId));
