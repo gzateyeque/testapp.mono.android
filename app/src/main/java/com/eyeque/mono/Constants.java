@@ -7,7 +7,7 @@ import android.provider.BaseColumns;
 
 public class Constants {
 
-    public final static String BuildNumber = "0.8.6";
+    public final static String BuildNumber = "0.8.7";
 
     public static final double PI = 3.141592653589793d;
 
